@@ -18,12 +18,18 @@
     <ClInclude Include="http.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="image.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="http.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Server.cpp">
+    <ClCompile Include="server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

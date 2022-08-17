@@ -156,10 +156,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="http.hpp" />
+    <ClInclude Include="image.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="http.cpp" />
-    <ClCompile Include="Server.cpp">
+    <ClCompile Include="image.cpp" />
+    <ClCompile Include="server.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

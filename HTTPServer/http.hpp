@@ -4,7 +4,13 @@
 #include <vector>
 #include <map>
 
+namespace http {
+
+const std::string status_line_sep(" ");
+const std::string header_sep("\r\n");
+const std::string field_sep(": ");
 const std::string header_end("\r\n\r\n");
+const std::string_view empty;
 
 
 template<typename string_t>
@@ -21,7 +27,6 @@ public:
 	virtual const string_t& operator[](const std::string& key) = 0;
 
 	const decltype(_header_size)& header_size = _header_size;
-	const decltype(_content_length)& content_length = _content_length;
 };
 
 template<typename string_t>
@@ -45,6 +50,7 @@ public:
 	const decltype(_method)& method = _method;
 	const decltype(_uri)& uri = _uri;
 	const decltype(_version)& version = _version;
+	const decltype(_content_length)& content_length = _content_length;
 };
 
 
@@ -58,5 +64,14 @@ public:
 
 	using HTTP_base::HTTP_base;
 	inline std::string& operator[](const std::string& key) override { return fields[key]; };
-	void build_buf(const uint8_t* const data, const size_t size);
+	void build_buf(const uint8_t* const data);
+
+	decltype(_content_length)& content_length = _content_length;
 };
+
+
+static const std::vector<std::string_view>
+parse_str(const std::string_view& str, const std::string& delim);
+
+
+} // namespace http
