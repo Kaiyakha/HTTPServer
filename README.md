@@ -2,7 +2,7 @@
 HTTP сервер, принимающий изображение в формате JPEG и отправляющий отзеркаленное изображение в аналогичной кодировке.
 ## Сборка
 ### Linux
-`g++ Server.cpp http.cpp image.cpp -std=c++17 -o server.out`
+`g++ server.cpp http.cpp image.cpp -std=c++17 -o server.out`
 ### Windows
 Сборка с помощью Visual Studio
 ## Запуск
