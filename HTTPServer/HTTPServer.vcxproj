@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="handle_error.hpp" />
     <ClInclude Include="http.hpp" />
     <ClInclude Include="image.hpp" />
   </ItemGroup>

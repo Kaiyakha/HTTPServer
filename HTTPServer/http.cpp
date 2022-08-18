@@ -25,11 +25,10 @@ void http::Request::parse(void) {
 	}
 
 	const std::string_view& content_length_str = this->operator[]("content-length");
-	if (content_length_str != empty) {
+	if (content_length_str != empty) {	
 		std::from_chars(content_length_str.data(), content_length_str.data() + content_length_str.size(), _content_length);
 		body = std::shared_ptr<uint8_t[]>(raw, raw.get() + body_pos);
 	}
-	else _content_length = 0;
 }
 
 
@@ -41,9 +40,9 @@ const std::string_view& http::Request::operator[](const std::string& key) {
 
 void http::Request::repr(const bool show_body) const {
 	std::cout
-		<< "Method: " << method
-		<< "\nURI: " << uri
-		<< "\nVersion: " << version << '\n';
+		<< method << status_line_sep
+		<< uri << status_line_sep
+		<< version << header_sep;
 
 	for (const auto& line : fields) {
 		std::cout << line.first << field_sep << line.second << '\n';
@@ -57,7 +56,7 @@ void http::Request::repr(const bool show_body) const {
 }
 
 
-void http::Response::build_buf(const uint8_t* const data) {
+void http::Response::build(const uint8_t* const data) {
 	size_t stride = 0;
 
 	for (const auto& status_line_entity : std::vector<std::string>{ version + status_line_sep, errcode + status_line_sep, reason_phrase }) {
@@ -75,6 +74,7 @@ void http::Response::build_buf(const uint8_t* const data) {
 
 	std::memcpy((void*)(raw.get() + stride), header_end.data(), header_end.size());
 	stride += header_end.size();
+	_header_size = stride;
 
 	if (content_length) {
 		body = std::shared_ptr<uint8_t[]>(raw, raw.get() + stride);
@@ -83,6 +83,13 @@ void http::Response::build_buf(const uint8_t* const data) {
 	}
 
 	_bufsize = stride;
+}
+
+
+void http::Response::repr(const bool show_body) const noexcept {
+	size_t c;
+	for (c = 0; c < header_size; c++) std::cout << raw[c];
+	if (show_body) for (; c < bufsize; c++) std::cout << raw[c];
 }
 
 

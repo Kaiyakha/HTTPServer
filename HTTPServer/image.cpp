@@ -8,7 +8,7 @@
 #include "stb_image/stb_image_write.h"
 #include "image.hpp"
 
-#pragma warning (once: 6386 6385 6262 6061 4267 4244 26819 26451)
+#pragma warning (disable: 6386 6385 6262 6061 4267 4244 26819 26451)
 
 
 typedef struct {
