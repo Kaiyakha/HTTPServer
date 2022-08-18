@@ -29,6 +29,7 @@
 #endif
 
 
+// A function to handle socket errors
 template <typename T>
 static T handle_error(T returned_val, T err_val, const std::string& message) {
 	if (returned_val == err_val) {

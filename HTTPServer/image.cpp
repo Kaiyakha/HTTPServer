@@ -8,14 +8,17 @@
 #include "stb_image/stb_image_write.h"
 #include "image.hpp"
 
+// These warnings come from stb_image library
 #pragma warning (disable: 6386 6385 6262 6061 4267 4244 26819 26451)
 
 
+// This structure is required by stb_image to write JPEG-encoded data into a buffer
 typedef struct {
 	size_t last_pos;
 	uint8_t* buffer;
 } stbi_memory_context;
 
+// This function is required by stb_image to write JPEG-encoded data into a buffer
 static void stbi_write_memory(void* context, void* data, int size);
 
 
@@ -29,6 +32,7 @@ const bool mirror_jpg(const uint8_t* const data, uint8_t* result, const size_t i
 	const size_t res = width * height;
 	std::unique_ptr<uint8_t[]> temp(new uint8_t[channels]);
 
+	// The loop goes through pixels on the left size of an image and swaps them with pixels on the right side
 	size_t pix_id, mir_pix_id, ch, byte_id, mir_byte_id;
 	for (pix_id = 0; pix_id < res; pix_id++) {
 		if (pix_id % width >= width >> 1) {

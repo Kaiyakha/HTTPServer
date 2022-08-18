@@ -4,6 +4,7 @@
 #include "http.hpp"
 
 
+// Parse raw buffer into HTTP fields
 void http::Request::parse(void) {
 	const std::string_view str_view(reinterpret_cast<char*>(raw.get()));
 
@@ -32,12 +33,14 @@ void http::Request::parse(void) {
 }
 
 
+// Return a value for a key if found
 const std::string_view& http::Request::operator[](const std::string& key) {
 	if (fields.find(key) != fields.end()) return fields[key];
 	else return empty;
 }
 
 
+// Output parse result to console
 void http::Request::repr(const bool show_body) const {
 	std::cout
 		<< method << status_line_sep
@@ -56,6 +59,7 @@ void http::Request::repr(const bool show_body) const {
 }
 
 
+// Comprise HTTP response fields into one raw buffer
 void http::Response::build(const uint8_t* const data) {
 	size_t stride = 0;
 
@@ -86,6 +90,7 @@ void http::Response::build(const uint8_t* const data) {
 }
 
 
+// Represent the response as raw buffer data
 void http::Response::repr(const bool show_body) const noexcept {
 	size_t c;
 	for (c = 0; c < header_size; c++) std::cout << raw[c];
@@ -93,6 +98,7 @@ void http::Response::repr(const bool show_body) const noexcept {
 }
 
 
+// Parse a string with a given delimiter
 static const std::vector<std::string_view>
 http::parse_str(const std::string_view& str, const std::string& delim) {
 	std::vector<std::string_view> parsed;

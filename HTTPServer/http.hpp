@@ -8,9 +8,10 @@
 #include <cstring>
 #endif
 
-
+// HTTP parser
 namespace http {
 
+// Default character sequences
 const std::string status_line_sep(" ");
 const std::string header_sep("\r\n");
 const std::string field_sep(": ");
@@ -18,6 +19,7 @@ const std::string header_end("\r\n\r\n");
 const std::string_view empty;
 
 
+// Abstract HTTP base class, defines key-value fields as well as some common methods and attributes
 template<typename string_t>
 class HTTP_base {
 protected:
@@ -35,6 +37,7 @@ public:
 	virtual void repr(const bool show_body) const = 0;
 };
 
+// A constructor allocates buffer to receive and send data
 template<typename string_t>
 HTTP_base<string_t>::HTTP_base(const size_t bufsize) {
 	raw = std::shared_ptr<uint8_t[]>(new uint8_t[bufsize]);
@@ -42,6 +45,7 @@ HTTP_base<string_t>::HTTP_base(const size_t bufsize) {
 }
 
 
+// HTTP request receives raw buffer and parses data into mapped fields
 class Request : public HTTP_base<std::string_view> {
 private:
 	std::string_view _method, _uri, _version;
@@ -60,6 +64,7 @@ public:
 };
 
 
+// HTTP response builds raw buffer with all provided data
 class Response : public HTTP_base<std::string> {
 private:
 	size_t _bufsize;
@@ -76,6 +81,7 @@ public:
 };
 
 
+// Parse a string with a provided delimiter
 static const std::vector<std::string_view>
 parse_str(const std::string_view& str, const std::string& delim);
 
