@@ -9,7 +9,7 @@
 #define ARGC_REQUIRED 3
 
 // A function to process request and fill in response fields accordingly
-static void process_request(const http::Request& request, http::Response& response, std::unique_ptr<uint8_t[]>& buffer);
+static void process_request(http::Request& request, http::Response& response, std::unique_ptr<uint8_t[]>& buffer);
 
 
 int main(const int argc, const char* const argv[]) {
@@ -88,7 +88,6 @@ int main(const int argc, const char* const argv[]) {
 		// Fill in response fields
 		response.version = request.version;
 		response["server"] = inet_ntoa(tcp_server.sin_addr);
-		response["content-type"] = request["content-type"];
 		response["connection"] = "closed";
 
 		// Build a contiguous buffer with all response data (header and body)
@@ -113,7 +112,7 @@ int main(const int argc, const char* const argv[]) {
 }
 
 
-static void process_request(const http::Request& request, http::Response& response, std::unique_ptr<uint8_t[]>& buffer) {
+static void process_request(http::Request& request, http::Response& response, std::unique_ptr<uint8_t[]>& buffer) {
 	// The server rejects any methods but POST
 	if (request.method != "POST") {
 		response.errcode = "405";
@@ -131,6 +130,6 @@ static void process_request(const http::Request& request, http::Response& respon
 	const bool success = mirror_jpg(request.get_body(), buffer.get(), request.content_length, response.content_length);
 
 	// Fill in response fields accordingly
-	if (success) { response.errcode = "200"; response.reason_phrase = "OK"; }
+	if (success) { response.errcode = "200"; response.reason_phrase = "OK";	response["content-type"] = request["content-type"];	}
 	else { response.errcode = "500"; response.reason_phrase = "Internal Server Error"; }
 }

@@ -41,5 +41,5 @@ static T handle_error(T returned_val, T err_val, const std::string& message) {
 #define HANDLE_SOCKET_ERROR(returned_val, message) handle_error<decltype(SOCKET_ERROR)>(returned_val, SOCKET_ERROR, message)
 #define HANDLE_INVALID_SOCKET(returned_val, message) handle_error<decltype(INVALID_SOCKET)>(returned_val, INVALID_SOCKET, message)
 #ifdef _WIN32
-#define HANDLE_DLL_LOAD_ERROR(returned_val) handle_error<decltype(returned_val)>(returned_val, !0, "Failed to load ws2_32.dll")
+#define HANDLE_DLL_LOAD_ERROR(returned_val) handle_error<bool>((bool)returned_val, true, "Failed to load ws2_32.dll.")
 #endif

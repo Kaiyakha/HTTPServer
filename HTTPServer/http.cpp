@@ -8,8 +8,7 @@
 void http::Request::parse(void) {
 	const std::string_view str_view(reinterpret_cast<char*>(raw.get()));
 
-	_header_size = str_view.find(header_end);
-	const size_t body_pos = header_size + header_end.size();
+	_header_size = str_view.find(header_end) + header_end.size();
 
 	const std::string_view header = str_view.substr(0, header_size);
 	const std::vector<std::string_view> header_lines = parse_str(header, header_sep);
@@ -28,7 +27,7 @@ void http::Request::parse(void) {
 	const std::string_view& content_length_str = this->operator[]("content-length");
 	if (content_length_str != empty) {	
 		std::from_chars(content_length_str.data(), content_length_str.data() + content_length_str.size(), _content_length);
-		body = std::shared_ptr<uint8_t[]>(raw, raw.get() + body_pos);
+		body = std::shared_ptr<uint8_t[]>(raw, raw.get() + header_size);
 	}
 }
 
@@ -68,7 +67,7 @@ void http::Response::build(const uint8_t* const data) {
 		stride += status_line_entity.size();
 	}
 
-	fields["content-length"] = std::to_string(content_length);
+	if (content_length) fields["content-length"] = std::to_string(content_length);
 	std::string header_line_str;
 	for (const auto& header_line : fields) {
 		header_line_str = header_sep + header_line.first + field_sep + header_line.second;
@@ -105,7 +104,7 @@ http::parse_str(const std::string_view& str, const std::string& delim) {
 	size_t substr_front = 0, substr_count = str.find(delim);
 
 	std::string_view substr;
-	while (substr_count <= str.size()) {
+	while (substr_count < str.size()) {
 		if (substr_count) {
 			substr = str.substr(substr_front, substr_count);
 			parsed.push_back(substr);

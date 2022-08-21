@@ -30,10 +30,10 @@ const bool mirror_jpg(const uint8_t* const data, uint8_t* result, const size_t i
 	if (image == NULL) return false;
 
 	const size_t res = width * height;
-	std::unique_ptr<uint8_t[]> temp(new uint8_t[channels]);
 
 	// The loop goes through pixels on the left size of an image and swaps them with pixels on the right side
 	size_t pix_id, mir_pix_id, ch, byte_id, mir_byte_id;
+	uint8_t temp;
 	for (pix_id = 0; pix_id < res; pix_id++) {
 		if (pix_id % width >= width >> 1) {
 			--pix_id += static_cast<size_t>(std::ceil(static_cast<float>(width) / 2));
@@ -43,9 +43,9 @@ const bool mirror_jpg(const uint8_t* const data, uint8_t* result, const size_t i
 		byte_id = pix_id * channels;
 		mir_byte_id = mir_pix_id * channels;
 		for (ch = 0; ch < channels; ch++) {
-			temp[ch] = image[byte_id];
+			temp = image[byte_id];
 			image[byte_id] = image[mir_byte_id];
-			image[mir_byte_id] = temp[ch];
+			image[mir_byte_id] = temp;
 			byte_id++; mir_byte_id++;
 		}
 	}
